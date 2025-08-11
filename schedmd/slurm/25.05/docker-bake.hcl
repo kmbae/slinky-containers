@@ -4,7 +4,8 @@
 ################################################################################
 
 variable "DOCKER_BAKE_REGISTRY" {
-  default = "ghcr.io/slinkyproject"
+  #default = "ghcr.io/slinkyproject"
+  default = "registry-aisi.duckdns.org/slinky"
 }
 
 variable "DOCKER_BAKE_SUFFIX" {}
@@ -136,21 +137,21 @@ target "_login" {
 
 group "default" {
   targets = [
-    "rockylinux9",
+    #"rockylinux9",
     "ubuntu2404",
   ]
 }
 
 group "core" {
   targets = [
-    "rockylinux9-core",
+    #"rockylinux9-core",
     "ubuntu2404-core",
   ]
 }
 
 group "extras" {
   targets = [
-    "rockylinux9-extras",
+    #"rockylinux9-extras",
     "ubuntu2404-extras",
   ]
 }
@@ -254,7 +255,8 @@ target "slurmd_pyxis_rockylinux9" {
     format_tag("${DOCKER_BAKE_REGISTRY}", "slurmd-pyxis", "${slurm_version}", "rockylinux9", "${DOCKER_BAKE_SUFFIX}"),
   ]
   contexts = {
-    "ghcr.io/slinkyproject/slurmd:25.05-rockylinux9" = "target:slurmd_rockylinux9"
+    "registry-aisi.duckdns.org/slinky/slurmd:25.05-rockylinux9" = "target:slurmd_rockylinux9"
+    #"ghcr.io/slinkyproject/slurmd:25.05-rockylinux9" = "target:slurmd_rockylinux9"
   }
 }
 
@@ -267,8 +269,10 @@ target "login_pyxis_rockylinux9" {
     format_tag("${DOCKER_BAKE_REGISTRY}", "login-pyxis", "${slurm_version}", "rockylinux9", "${DOCKER_BAKE_SUFFIX}"),
   ]
   contexts = {
-    "ghcr.io/slinkyproject/slurmd:25.05-rockylinux9" = "target:slurmd_rockylinux9"
-    "ghcr.io/slinkyproject/login:25.05-rockylinux9" = "target:login_rockylinux9"
+    #"ghcr.io/slinkyproject/slurmd:25.05-rockylinux9" = "target:slurmd_rockylinux9"
+    #"ghcr.io/slinkyproject/login:25.05-rockylinux9" = "target:login_rockylinux9"
+    "registry-aisi.duckdns.org/slinky/slurmd:25.05-rockylinux9" = "target:slurmd_rockylinux9"
+    "registry-aisi.duckdns.org/slinky/login:25.05-rockylinux9" = "target:login_rockylinux9"
   }
 }
 
@@ -371,7 +375,8 @@ target "slurmd_pyxis_ubuntu2404" {
     format_tag("${DOCKER_BAKE_REGISTRY}", "slurmd-pyxis", "${slurm_version}", "ubuntu24.04", "${DOCKER_BAKE_SUFFIX}"),
   ]
   contexts = {
-    "ghcr.io/slinkyproject/slurmd:25.05-ubuntu24.04" = "target:slurmd_ubuntu2404"
+    #"ghcr.io/slinkyproject/slurmd:25.05-ubuntu24.04" = "target:slurmd_ubuntu2404"
+    "registry-aisi.duckdns.org/slinky/slurmd:25.05-ubuntu24.04" = "target:slurmd_ubuntu2404"
   }
 }
 
@@ -384,7 +389,9 @@ target "login_pyxis_ubuntu2404" {
     format_tag("${DOCKER_BAKE_REGISTRY}", "login-pyxis", "${slurm_version}", "ubuntu24.04", "${DOCKER_BAKE_SUFFIX}"),
   ]
   contexts = {
-    "ghcr.io/slinkyproject/slurmd:25.05-ubuntu24.04" = "target:slurmd_ubuntu2404"
-    "ghcr.io/slinkyproject/login:25.05-ubuntu24.04" = "target:login_ubuntu2404"
+    #"ghcr.io/slinkyproject/slurmd:25.05-ubuntu24.04" = "target:slurmd_ubuntu2404"
+    #"ghcr.io/slinkyproject/login:25.05-ubuntu24.04" = "target:login_ubuntu2404"
+    "registry-aisi.duckdns.org/slinky/slurmd:25.05-ubuntu24.04" = "target:slurmd_ubuntu2404"
+    "registry-aisi.duckdns.org/slinky/login:25.05-ubuntu24.04" = "target:login_ubuntu2404"
   }
 }

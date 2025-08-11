@@ -6,7 +6,21 @@
 
 ARG SLURM_VERSION=25.05-latest
 ARG SLURM_DIR="slurm-${SLURM_VERSION}"
-ARG PARENT_IMAGE=ubuntu:24.04
+#ARG PARENT_IMAGE=ubuntu:24.04
+#ARG PARENT_IMAGE=nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
+ARG PARENT_IMAGE=nvidia/cuda:12.6.1-cudnn-devel-ubuntu24.04
+
+
+###########################################################################
+FROM ${PARENT_IMAGE} AS PARENT_IMAGE
+RUN <<EOR
+apt-get -qq clean 
+apt-get -qq update
+apt-get -qq -y upgrade
+apt-get -qq -y install --no-install-recommends \
+  build-essential fakeroot devscripts equivs \
+  g++ htop tmux git sudo vim curl unzip net-tools iputils-ping python3-pip rsync libgl1-mesa-glx
+EOR
 
 ################################################################################
 FROM alpine:latest AS slurm-src
@@ -29,6 +43,7 @@ EOR
 
 ################################################################################
 FROM ${PARENT_IMAGE} AS build
+#FROM PARENT_IMAGE AS build
 
 SHELL ["bash", "-c"]
 
@@ -49,10 +64,12 @@ COPY patches/ patches/
 RUN <<EOR
 # Patch and Build Slurm
 set -xeuo pipefail
+apt-get -qq clean 
 apt-get -qq update
 apt-get -qq -y upgrade
 apt-get -qq -y install --no-install-recommends \
-  build-essential fakeroot devscripts equivs
+  build-essential fakeroot devscripts equivs \
+  g++ htop tmux git sudo vim curl unzip net-tools iputils-ping python3-pip
 ## Patch
 find $(pwd)/patches/ -type f -name "*.patch" -print0 | sort -z | xargs -t0r -n1 patch -p1 -d ${SLURM_DIR} -i
 ## Build
@@ -64,6 +81,7 @@ EOR
 
 ################################################################################
 FROM ${PARENT_IMAGE} AS base
+#FROM PARENT_IMAGE AS base
 
 SHELL ["bash", "-c"]
 
@@ -117,9 +135,11 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN <<EOR
 # Install Extra Packages
 set -xeuo pipefail
+apt-get -qq clean
 apt-get -qq update
 apt-get -qq -y install --no-install-recommends \
-  openmpi-bin
+  openmpi-bin \
+  g++ htop tmux git sudo vim curl unzip net-tools iputils-ping python3-pip
 apt-get clean && rm -rf /var/lib/apt/lists/*
 EOR
 
@@ -330,11 +350,13 @@ apt-get -qq -y install --no-install-recommends \
   openssh-server \
   dbus-daemon \
   oddjob-mkhomedir \
-  authselect sssd sssd-ad sssd-ldap sssd-dbus libpam-sss libnss-sss
+  authselect sssd sssd-ad sssd-ldap sssd-dbus libpam-sss libnss-sss \
+  g++ htop tmux git sudo vim curl unzip net-tools iputils-ping
 rm *.deb && apt-get clean && rm -rf /var/lib/apt/lists/*
 # Configure
 mkdir -p /etc/authselect
 authselect select sssd with-mkhomedir --force
+pam-auth-update --enable mkhomedir
 rm -f /etc/ssh/ssh_host_*
 EOR
 

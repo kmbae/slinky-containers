@@ -8,7 +8,8 @@ ARG ENROOT_VERSION=3.5.0
 ARG PYXIS_VERSION=0.20.0
 
 ################################################################################
-FROM ghcr.io/slinkyproject/slurmd:25.05-ubuntu24.04 AS download
+#FROM ghcr.io/slinkyproject/slurmd:25.05-ubuntu24.04 AS download
+FROM registry-aisi.duckdns.org/slinky/slurmd:25.05-ubuntu24.04 AS download
 
 SHELL ["bash", "-c"]
 
@@ -50,7 +51,7 @@ EOR
 # SLURM: slurmd-pyxis
 # BUILD: `docker build --target=slurmd-pyxis -t [<registry>/]slurmd-pyxis:<tag> .`
 ################################################################################
-FROM ghcr.io/slinkyproject/slurmd:25.05-ubuntu24.04 AS slurmd-pyxis
+FROM registry-aisi.duckdns.org/slinky/slurmd:25.05-ubuntu24.04 AS slurmd-pyxis
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -109,7 +110,8 @@ EOR
 # SLURM: login-pyxis
 # BUILD: `docker build --target=login-pyxis -t [<registry>/]login-pyxis:<tag> .`
 ################################################################################
-FROM ghcr.io/slinkyproject/login:25.05-ubuntu24.04 AS login-pyxis
+#FROM ghcr.io/slinkyproject/login:25.05-ubuntu24.04 AS login-pyxis
+FROM registry-aisi.duckdns.org/slinky/login:25.05-ubuntu24.04 AS login-pyxis
 
 ARG DEBIAN_FRONTEND=noninteractive
 
